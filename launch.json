@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🐛 Déboguer l'application",
+            "type": "java",
+            "name": "Debug GestionCahierTexte",
+            "request": "launch",
+            "mainClass": "View.LoginFrame",
+            "projectName": "GestionCahierTexte",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "preLaunchTask": "🔨 Compiler le projet"
+        }
+    ]
+}

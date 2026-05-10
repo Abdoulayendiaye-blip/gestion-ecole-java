@@ -1,0 +1,97 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🔨 Compiler le projet",
+            "type": "shell",
+            "command": "javac",
+            "args": [
+                "-d", "bin",
+                "-cp", "lib/flatlaf-3.4.1.jar;lib/io-7.2.5.jar;lib/itextpdf-5.5.13.3.jar;lib/javax.activation.jar;lib/javax.mail.jar;lib/json-20240303.jar;lib/kernel-7.1.15.jar;lib/layout-7.1.15.jar;lib/mysql-connector-j-9.6.0.jar;lib/slf4j-api-1.7.30.jar;src",
+                "src/Model/Utilisateur.java",
+                "src/Model/Classe.java",
+                "src/Model/Seance.java",
+                "src/Model/AssistantIA.java",
+                "src/View/EmailSender.java",
+                "src/View/PaiementDAO.java",
+                "src/View/LoginFrame.java",
+                "src/View/ChefDashboard.java",
+                "src/View/EnseignantDashboard.java",
+                "src/View/ResponsableDashboard.java",
+                "src/View/AjoutEtudiantFrame.java",
+                "src/View/AjoutProfFrame.java",
+                "src/View/AssignerCoursFrame.java",
+                "src/View/ConsultationCahiersFrame.java",
+                "src/View/EnregistrerPaiementFrame.java",
+                "src/View/FaireAppelFrame.java",
+                "src/View/FicheSuiviFrame.java",
+                "src/View/GestionEnseignantsFrame.java",
+                "src/View/ModifierEtudiantFrame.java",
+                "src/View/SaisieAbsenceFrame.java",
+                "src/View/SaisieSeanceFrame.java",
+                "src/View/ValidationResponsableFrame.java",
+                "src/View/VerifProgrammeResponsableFrame.java",
+                "src/View/VisualisationProgrammeFrame.java",
+                "src/View/TestMail.java"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$javac"],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "🚀 Lancer l'application",
+            "type": "shell",
+            "command": "java",
+            "args": [
+                "-cp", "bin;lib/flatlaf-3.4.1.jar;lib/io-7.2.5.jar;lib/itextpdf-5.5.13.3.jar;lib/javax.activation.jar;lib/javax.mail.jar;lib/json-20240303.jar;lib/kernel-7.1.15.jar;lib/layout-7.1.15.jar;lib/mysql-connector-j-9.6.0.jar;lib/slf4j-api-1.7.30.jar",
+                "View.LoginFrame"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": "🔨 Compiler le projet",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "🧪 Compiler SANS lancer",
+            "type": "shell",
+            "command": "javac",
+            "args": [
+                "-d", "bin",
+                "-cp", "lib/*;src",
+                "src/Model/*.java",
+                "src/View/*.java"
+            ],
+            "group": "build",
+            "problemMatcher": ["$javac"],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "🧹 Nettoyer les fichiers compilés",
+            "type": "shell",
+            "command": "rmdir",
+            "args": ["/s", "/q", "bin\\Model", "bin\\View"],
+            "windows": {
+                "command": "powershell",
+                "args": ["-Command", "Remove-Item -Path 'bin\\Model', 'bin\\View' -Recurse -Force -ErrorAction SilentlyContinue"]
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}
