@@ -178,14 +178,17 @@ public class SaisieSeanceFrame extends JFrame {
             ResultSet rsM = pstM.executeQuery();
             int total = rsM.next() ? rsM.getInt(1) : 0;
 
+            // ✅ CHANGEMENT: Compter les séances "Terminé" ET "VALIDÉ"
             PreparedStatement pstS = con.prepareStatement("SELECT contenu, date_seance FROM seances WHERE nom_matiere = ? AND id_classe = ? AND (statut = 'Terminé' OR statut = 'VALIDÉ')");
             pstS.setString(1, mat); pstS.setInt(2, idClasse);
             ResultSet rsS = pstS.executeQuery();
             int faites = 0;
             while (rsS.next()) {
-                faites += 2;
+                faites += 2;  // Chaque séance = 2 heures
                 modelProgression.addRow(new Object[]{rsS.getString(1), rsS.getString(2)});
             }
+            
+            // ✅ Calculer le pourcentage
             int p = (total > 0) ? (faites * 100) / total : 0;
             progressBar.setValue(p);
             lblPourcentage.setText("Progression " + mat + " : " + p + "% (" + faites + "h/" + total + "h)");
@@ -195,15 +198,30 @@ public class SaisieSeanceFrame extends JFrame {
     private void enregistrer() {
         String mat = (String) comboMatieres.getSelectedItem();
         String cont = txtContenu.getText().trim();
-        if(cont.isEmpty()) return;
+        if(cont.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Veuillez saisir le contenu de la séance.");
+            return;
+        }
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/gestion_cahier_texte", "root", "")) {
+            // ✅ Enregistrement avec statut "Terminé"
             PreparedStatement pst = con.prepareStatement("INSERT INTO seances (enseignant_id, id_classe, nom_matiere, contenu, date_seance, statut) VALUES (?, ?, ?, ?, ?, 'Terminé')");
-            pst.setInt(1, idProf); pst.setInt(2, idClasse); pst.setString(3, mat); pst.setString(4, cont);
+            pst.setInt(1, idProf); 
+            pst.setInt(2, idClasse); 
+            pst.setString(3, mat); 
+            pst.setString(4, cont);
             pst.setString(5, LocalDate.now().toString());
             pst.executeUpdate();
+            
             JOptionPane.showMessageDialog(this, "Séance enregistrée !");
-            txtContenu.setText(""); chargerHistorique(); chargerProgression();
-        } catch (SQLException e) { e.printStackTrace(); }
+            txtContenu.setText("");
+            
+            // ✅ IMPORTANT: Mettre à jour les deux tableaux ET la barre de progression
+            chargerHistorique();      // Rafraîchir l'historique
+            chargerProgression();     // Mettre à jour la barre immédiatement
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+            JOptionPane.showMessageDialog(this, "Erreur : " + e.getMessage());
+        }
     }
 }
